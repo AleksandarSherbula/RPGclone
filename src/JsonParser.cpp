@@ -147,17 +147,47 @@ int JsonParser::GetKeyCode(const std::string& j_key)
 	if (j_key == "INSERT")         return VK_INSERT;
 	if (j_key == "DELETE")         return VK_DELETE;
 	if (j_key == "HELP")           return VK_HELP;
-	if (j_key == "NUM_0")          return 0x30;
-	if (j_key == "NUM_1")          return 0x31;
-	if (j_key == "NUM_2")          return 0x32;
-	if (j_key == "NUM_3")          return 0x33;
-	if (j_key == "NUM_4")          return 0x34;
-	if (j_key == "NUM_5")          return 0x35;
-	if (j_key == "NUM_6")          return 0x36;
-	if (j_key == "NUM_7")          return 0x37;
-	if (j_key == "NUM_8")          return 0x38;
-	if (j_key == "NUM_9")          return 0x39;
-	if (j_key == "A")              return 0x41;
+	if (j_key == "NUM_0")          return VK_NUMPAD0;
+	if (j_key == "NUM_1")          return VK_NUMPAD1;
+	if (j_key == "NUM_2")          return VK_NUMPAD2;
+	if (j_key == "NUM_3")          return VK_NUMPAD3;
+	if (j_key == "NUM_4")          return VK_NUMPAD4;
+	if (j_key == "NUM_5")          return VK_NUMPAD5;
+	if (j_key == "NUM_6")          return VK_NUMPAD6;
+	if (j_key == "NUM_7")          return VK_NUMPAD7;
+	if (j_key == "NUM_8")          return VK_NUMPAD8;
+	if (j_key == "NUM_9")          return VK_NUMPAD9;
+	if (j_key == "MULTIPLY")       return VK_MULTIPLY;
+    if (j_key == "ADD")            return VK_ADD;
+    if (j_key == "SEPARATOR")      return VK_SEPARATOR;
+    if (j_key == "SUBTRACT")       return VK_SUBTRACT;
+    if (j_key == "DECIMAL")        return VK_DECIMAL;
+    if (j_key == "DIVIDE")         return VK_DIVIDE;
+    if (j_key == "F1")             return VK_F1;
+    if (j_key == "F2")             return VK_F2;
+    if (j_key == "F3")             return VK_F3;
+    if (j_key == "F4")             return VK_F4;
+    if (j_key == "F5")             return VK_F5;
+    if (j_key == "F6")             return VK_F6;
+    if (j_key == "F7")             return VK_F7;
+    if (j_key == "F8")             return VK_F8;
+    if (j_key == "F9")             return VK_F9;
+    if (j_key == "F10")            return VK_F10;
+    if (j_key == "F11")            return VK_F11;
+    if (j_key == "F12")            return VK_F12;
+    if (j_key == "F13")            return VK_F13;
+    if (j_key == "F14")            return VK_F14;
+    if (j_key == "F15")            return VK_F15;
+    if (j_key == "F16")            return VK_F16;
+    if (j_key == "F17")            return VK_F17;
+    if (j_key == "F18")            return VK_F18;
+    if (j_key == "F19")            return VK_F19;
+    if (j_key == "F20")            return VK_F20;
+    if (j_key == "F21")            return VK_F21;
+    if (j_key == "F22")            return VK_F22;
+    if (j_key == "F23")            return VK_F23;
+    if (j_key == "F24")            return VK_F24;
+    if (j_key == "A")              return 0x41;
 	if (j_key == "B")              return 0x42;
 	if (j_key == "C")              return 0x43;
 	if (j_key == "D")              return 0x44;
@@ -182,7 +212,11 @@ int JsonParser::GetKeyCode(const std::string& j_key)
 	if (j_key == "W")              return 0x57;
 	if (j_key == "X")              return 0x58;
 	if (j_key == "Y")              return 0x59;
-	if (j_key == "Z")              return 0x5A;	
+	if (j_key == "Z")              return 0x5A;
+
+
+	
+		
 
 	game->ErrorInfo(L"No such key exists");
 
