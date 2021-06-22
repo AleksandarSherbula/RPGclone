@@ -3,6 +3,10 @@
 Game::Game()
 {
 	sAppName = L"RPG clone";
+	config_json = std::make_unique<JsonParser>("data/config/config.json");
+
+	nConsoleScreenWidth = config_json->GetJSON()["ConsoleWidth"];
+	nConsoleScreenHeight = config_json->GetJSON()["ConsoleHeight"];
 }
 
 Game::~Game()
@@ -18,13 +22,13 @@ bool Game::Start()
 
 bool Game::Update()
 {
-	if (GetKeyPressed(alexio::W))
+	if (config_json->GetKeyPressed("Up"))
 		pos.y--;
-	if (GetKeyPressed(alexio::S))
+	if (config_json->GetKeyPressed("Down"))
 		pos.y++;
-	if (GetKeyPressed(alexio::A))
+	if (config_json->GetKeyPressed("Left"))
 		pos.x--;
-	if (GetKeyPressed(alexio::D))
+	if (config_json->GetKeyPressed("Right"))
 		pos.x++;
 
 	Clear();

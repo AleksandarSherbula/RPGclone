@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "AlexioConsoleEngine.h"
+#include "JsonParser.h"
 
 #include <memory>
 
@@ -16,6 +17,7 @@ public:
 public:
 	char player;
 	alexio::vec2 pos;
+	std::unique_ptr<JsonParser> config_json;
 };
 
 inline std::unique_ptr<Game> game = std::make_unique<Game>();
