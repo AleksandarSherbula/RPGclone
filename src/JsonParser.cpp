@@ -21,19 +21,36 @@ nlohmann::json& JsonParser::GetJSON()
 	return m_json;
 }
 
-int JsonParser::GetInt(const std::string& key)
+nlohmann::json& JsonParser::GetJSON(const std::string& key, int index)
 {
-	return m_json[key].get<int>();
+    if (index < 0)
+        return m_json[key];
+    else
+        return m_json[key][index];
 }
 
-bool JsonParser::GetBool(const std::string& key)
+int JsonParser::GetInt(const std::string& key, int index)
 {
-	return m_json[key].get<bool>();
+    if (index < 0)
+	    return m_json[key].get<int>();
+    else
+        return m_json[key][index].get<int>();
 }
 
-std::string JsonParser::GetString(const std::string& key)
+bool JsonParser::GetBool(const std::string& key, int index)
 {
-	return m_json[key].get<std::string>();
+    if (index < 0)
+        return m_json[key].get<bool>();
+    else
+        return m_json[key][index].get<bool>();
+}
+
+std::string JsonParser::GetString(const std::string& key, int index)
+{
+    if (index < 0)
+        return m_json[key].get<std::string>();
+    else
+        return m_json[key][index].get<std::string>();
 }
 
 bool JsonParser::GetKeyPressed(const std::string& key)

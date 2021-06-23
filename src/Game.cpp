@@ -34,14 +34,14 @@ bool Game::Update()
 
 	if (GetKeyPressed(alexio::F1))
 	{
-		save_json->GetJSON()["Position"][0] = pos.x;
-		save_json->GetJSON()["Position"][1] = pos.y;
+		save_json->GetJSON("Position", 0) = pos.x;
+		save_json->GetJSON("Position", 1) = pos.y;
 		save_json->SaveData();
 	}
 
 	if (GetKeyPressed(alexio::F2))
 	{
-		pos = alexio::vec2(save_json->GetJSON()["Position"][0].get<int>(), save_json->GetJSON()["Position"][1].get<int>());
+		pos = alexio::vec2(save_json->GetInt("Position", 0), save_json->GetInt("Position", 1));
 	}
 
 	Clear();

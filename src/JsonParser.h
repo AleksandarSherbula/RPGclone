@@ -2,6 +2,8 @@
 #define JSONPARSER_H
 
 #include "nlohmann/json.hpp"
+#include "olcResourcePack.h"
+
 #include <string>
 
 class JsonParser
@@ -15,10 +17,11 @@ public:
 	JsonParser(const std::string& filepath);
 
 	nlohmann::json& GetJSON();
+	nlohmann::json& GetJSON(const std::string& key, int index = -1);
 	
-	int GetInt(const std::string& key);
-	bool GetBool(const std::string& key);
-	std::string GetString(const std::string& key);
+	int GetInt(const std::string& key, int index = -1);
+	bool GetBool(const std::string& key, int index = -1);
+	std::string GetString(const std::string& key, int index = -1);
 
 	bool GetKeyPressed(const std::string& key);
 	bool GetKeyUp(const std::string& key);

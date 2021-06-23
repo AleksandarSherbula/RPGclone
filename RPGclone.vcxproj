@@ -124,6 +124,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(Solution)external\json\include\; $(SolutionDir)external\olcPack\include\;</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,6 +140,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(Solution)external\json\include\; $(SolutionDir)external\olcPack\include\;</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,12 +151,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="external\olcPack\src\olcResourcePack.cpp" />
     <ClCompile Include="src\AlexioConsoleEngine.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\JsonParser.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="external\olcPack\include\olcResourcePack.h" />
     <ClInclude Include="src\AlexioConsoleEngine.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\JsonParser.h" />
