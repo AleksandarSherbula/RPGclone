@@ -18,6 +18,7 @@ public:
 	char player;
 	alexio::vec2 pos;
 	std::unique_ptr<JsonParser> config_json;
+	std::unique_ptr<JsonParser> save_json;
 };
 
 inline std::unique_ptr<Game> game = std::make_unique<Game>();

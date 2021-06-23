@@ -7,6 +7,7 @@
 class JsonParser
 {
 private:
+	std::string mFilePath;
 	std::string m_JsonString;
 	nlohmann::json m_json;
 public:
