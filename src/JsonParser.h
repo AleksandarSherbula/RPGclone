@@ -2,22 +2,23 @@
 #define JSONPARSER_H
 
 #include "nlohmann/json.hpp"
-#include "olcResourcePack.h"
 
 #include <string>
+#include <memory>
 
 class JsonParser
 {
 private:
 	std::string mFilePath;
+	nlohmann::json m_json;	
 	std::string m_JsonString;
-	nlohmann::json m_json;
 public:
 	JsonParser();
 	JsonParser(const std::string& filepath);
+	JsonParser(std::vector<char>& rbMemory);
 
 	nlohmann::json& GetJSON();
-	nlohmann::json& GetJSON(const std::string& key, int index = -1);
+	nlohmann::json& GetJObject(const std::string& key, int index = -1);
 	
 	int GetInt(const std::string& key, int index = -1);
 	bool GetBool(const std::string& key, int index = -1);

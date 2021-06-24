@@ -10,10 +10,17 @@ JsonParser::JsonParser()
 }
 
 JsonParser::JsonParser(const std::string& filepath)
-{
+{    
     mFilePath = filepath;
 	m_JsonString = ReadFromFile(mFilePath);
 	m_json = nlohmann::json::parse(m_JsonString);
+}
+
+JsonParser::JsonParser(std::vector<char>& rbMemory)
+{
+    for (char& c : rbMemory)
+        m_JsonString += c;
+    m_json = nlohmann::json::parse(m_JsonString);
 }
 
 nlohmann::json& JsonParser::GetJSON()
@@ -21,7 +28,7 @@ nlohmann::json& JsonParser::GetJSON()
 	return m_json;
 }
 
-nlohmann::json& JsonParser::GetJSON(const std::string& key, int index)
+nlohmann::json& JsonParser::GetJObject(const std::string& key, int index)
 {
     if (index < 0)
         return m_json[key];

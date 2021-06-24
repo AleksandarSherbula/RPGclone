@@ -1,13 +1,23 @@
 #include "Game.h"
 
+#include "olcResourcePack.h"
+
 Game::Game()
 {
+	//std::unique_ptr<olc::ResourcePack> pack = std::make_unique<olc::ResourcePack>();
+	//pack->LoadPack("data/save_state/save.state", "SaveLexio");
+	//olc::ResourceBuffer rb = pack->GetFileBuffer("data/save_state/save1.json");
+
 	sAppName = L"RPG clone";
 	config_json = std::make_unique<JsonParser>("data/config/config.json");
 	save_json = std::make_unique<JsonParser>("data/save_state/save1.json");
+	//save_json = std::make_unique<JsonParser>(rb.vMemory);
+
+	//pack->AddFile("data/save_state/save1.json");
+	//pack->SavePack("data/save_state/save.state", "SaveLexio");
 
 	nConsoleScreenWidth = config_json->GetJSON()["ConsoleWidth"];
-	nConsoleScreenHeight = config_json->GetJSON()["ConsoleHeight"];
+	nConsoleScreenHeight = config_json->GetJSON()["ConsoleHeight"];	
 }
 
 Game::~Game()
@@ -34,8 +44,8 @@ bool Game::Update()
 
 	if (GetKeyPressed(alexio::F1))
 	{
-		save_json->GetJSON("Position", 0) = pos.x;
-		save_json->GetJSON("Position", 1) = pos.y;
+		save_json->GetJObject("Position", 0) = pos.x;
+		save_json->GetJObject("Position", 1) = pos.y;
 		save_json->SaveData();
 	}
 
