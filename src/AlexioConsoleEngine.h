@@ -235,15 +235,14 @@ namespace alexio
 
 		void ErrorInfo(const std::wstring& msg);
 		void ErrorMessageBox(const std::wstring& msg);
-	private:
-		void UpdateEngine();
-	protected:
 
 		void Clear();
 
 		void DrawChar(const vec2& pos, char c, int color = FG_WHITE);
 		void DrawString(const vec2& pos, const std::string& str, int color = FG_WHITE);
 		void DrawWideString(const vec2& pos, const std::wstring& str, int color = FG_WHITE);
+	private:
+		void UpdateEngine();
 	protected:
 		virtual bool Start() = 0;
 		virtual bool Update() = 0;

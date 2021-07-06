@@ -27,7 +27,7 @@
     <ClCompile Include="src\JsonParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="external\olcPack\src\olcResourcePack.cpp">
+    <ClCompile Include="src\MVC.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,7 +41,7 @@
     <ClInclude Include="src\JsonParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="external\olcPack\include\olcResourcePack.h">
+    <ClInclude Include="src\MVC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
