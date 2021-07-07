@@ -1,6 +1,6 @@
 workspace "RPGClone"
     configurations {"Debug", "Release"}
-    startproject "RPGClone"
+    startproject "RPGClone"    
 
 project "RPGClone"
     kind "ConsoleApp"

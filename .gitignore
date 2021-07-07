@@ -1,3 +1,9 @@
 #Directories
-.vs/
 build/
+.vs/
+
+# files
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user

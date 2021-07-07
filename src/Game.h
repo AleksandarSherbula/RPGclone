@@ -15,7 +15,7 @@ public:
 	bool Start() override;
 	bool Update() override;
 public:
-	char player;
+	char player;	
 	alexio::vec2 pos;
 	std::unique_ptr<JsonParser> config_json;
 	std::unique_ptr<JsonParser> save_json;

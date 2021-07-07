@@ -28,6 +28,7 @@ bool Game::Start()
 {
 	player = 'X';
 	pos = alexio::vec2(10, 10);
+
 	return true;
 }
 
@@ -56,7 +57,7 @@ bool Game::Update()
 
 	Clear();
 
-	DrawChar(pos, player, alexio::FG_BLUE);
+	DrawChar(pos, player, alexio::FG_BLUE);	
 
 	return !GetKeyPressed(alexio::ESCAPE);
 }
