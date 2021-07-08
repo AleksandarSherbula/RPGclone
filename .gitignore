@@ -1,6 +1,7 @@
 #Directories
 build/
 .vs/
+external/boost/
 
 # files
 **.sln

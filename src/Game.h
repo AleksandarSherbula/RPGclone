@@ -14,9 +14,12 @@ public:
 
 	bool Start() override;
 	bool Update() override;
+private:
+	std::array<bool, 5> mInput;
 public:
-	char player;	
+	std::wstring playerID;
 	alexio::vec2 pos;
+
 	std::unique_ptr<JsonParser> config_json;
 	std::unique_ptr<JsonParser> save_json;
 };

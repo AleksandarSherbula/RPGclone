@@ -26,7 +26,7 @@ Game::~Game()
 
 bool Game::Start()
 {
-	player = 'X';
+	playerID = L"X";
 	pos = alexio::vec2(10, 10);
 
 	return true;
@@ -34,14 +34,10 @@ bool Game::Start()
 
 bool Game::Update()
 {
-	if (config_json->GetKeyPressed("Up"))
-		pos.y--;
-	if (config_json->GetKeyPressed("Down"))
-		pos.y++;
-	if (config_json->GetKeyPressed("Left"))
-		pos.x--;
-	if (config_json->GetKeyPressed("Right"))
-		pos.x++;
+	if (config_json->GetKeyPressed("Up"))     pos.y--;
+	if (config_json->GetKeyPressed("Down"))   pos.y++;
+	if (config_json->GetKeyPressed("Left"))   pos.x--;
+	if (config_json->GetKeyPressed("Right"))  pos.x++;
 
 	if (GetKeyPressed(alexio::F1))
 	{
@@ -49,15 +45,15 @@ bool Game::Update()
 		save_json->GetJObject("Position", 1) = pos.y;
 		save_json->SaveData();
 	}
-
+	
 	if (GetKeyPressed(alexio::F2))
 	{
 		pos = alexio::vec2(save_json->GetInt("Position", 0), save_json->GetInt("Position", 1));
 	}
-
+	
 	Clear();
-
-	DrawChar(pos, player, alexio::FG_BLUE);	
+	
+	DrawWideString(pos, playerID, alexio::FG_BLUE);
 
 	return !GetKeyPressed(alexio::ESCAPE);
 }
