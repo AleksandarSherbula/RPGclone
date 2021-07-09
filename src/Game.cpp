@@ -9,15 +9,15 @@ Game::Game()
 	//olc::ResourceBuffer rb = pack->GetFileBuffer("data/save_state/save1.json");
 
 	sAppName = L"RPG clone";
-	config_json = std::make_unique<JsonParser>("data/config/config.json");
-	save_json = std::make_unique<JsonParser>("data/save_state/save1.json");
-	//save_json = std::make_unique<JsonParser>(rb.vMemory);
+	jsonConfig = std::make_unique<JsonParser>("data/config/config.json");
+	jsonSave = std::make_unique<JsonParser>("data/save_state/save1.json");
+	//jsonSave = std::make_unique<JsonParser>(rb.vMemory);
 
 	//pack->AddFile("data/save_state/save1.json");
 	//pack->SavePack("data/save_state/save.state", "SaveLexio");
 
-	nConsoleScreenWidth = config_json->GetJSON()["ConsoleWidth"];
-	nConsoleScreenHeight = config_json->GetJSON()["ConsoleHeight"];	
+	nConsoleScreenWidth = jsonConfig->GetJSON()["ConsoleWidth"];
+	nConsoleScreenHeight = jsonConfig->GetJSON()["ConsoleHeight"];	
 }
 
 Game::~Game()
@@ -26,34 +26,21 @@ Game::~Game()
 
 bool Game::Start()
 {
-	playerID = L"X";
-	pos = alexio::vec2(10, 10);
+	player = std::make_unique<Player>(L"X", alexio::vec2(10, 10), alexio::FG_LIGHT_BLUE);
+	map = std::make_unique<Map>();
 
 	return true;
 }
 
 bool Game::Update()
 {
-	if (config_json->GetKeyPressed("Up"))     pos.y--;
-	if (config_json->GetKeyPressed("Down"))   pos.y++;
-	if (config_json->GetKeyPressed("Left"))   pos.x--;
-	if (config_json->GetKeyPressed("Right"))  pos.x++;
-
-	if (GetKeyPressed(alexio::F1))
-	{
-		save_json->GetJObject("Position", 0) = pos.x;
-		save_json->GetJObject("Position", 1) = pos.y;
-		save_json->SaveData();
-	}
-	
-	if (GetKeyPressed(alexio::F2))
-	{
-		pos = alexio::vec2(save_json->GetInt("Position", 0), save_json->GetInt("Position", 1));
-	}
+	player->Behaviour();
 	
 	Clear();
-	
-	DrawWideString(pos, playerID, alexio::FG_BLUE);
+
+	map->Draw();
+
+	player->Draw();
 
 	return !GetKeyPressed(alexio::ESCAPE);
 }

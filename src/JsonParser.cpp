@@ -44,6 +44,11 @@ int JsonParser::GetInt(const std::string& key, int index)
         return m_json[key][index].get<int>();
 }
 
+int JsonParser::GetArraySize(const std::string& key)
+{
+    return m_json[key].size();
+}
+
 bool JsonParser::GetBool(const std::string& key, int index)
 {
     if (index < 0)

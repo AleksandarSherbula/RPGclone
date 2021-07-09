@@ -21,6 +21,7 @@ public:
 	nlohmann::json& GetJObject(const std::string& key, int index = -1);
 	
 	int GetInt(const std::string& key, int index = -1);
+	int GetArraySize(const std::string& key);
 	bool GetBool(const std::string& key, int index = -1);
 	std::string GetString(const std::string& key, int index = -1);
 
