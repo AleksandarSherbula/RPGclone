@@ -30,13 +30,31 @@ public:
 	void Draw(const std::wstring& id, const alexio::vec2& position, const int color = alexio::FG_WHITE);
 };
 
-class Player : public Object
+class DynamicObject : public Object
 {
-private:
+protected:
 	alexio::vec2 mDirection;
+public:
+	DynamicObject();
+	DynamicObject(const std::wstring& id, const alexio::vec2& position, const int color = alexio::FG_WHITE);	
+};
+
+class Player : public DynamicObject
+{
 public:
 	Player();
 	Player(const std::wstring& id, const alexio::vec2& position, const int color = alexio::FG_WHITE);
+
+	void Behaviour() override;
+};
+
+class Enemy : public DynamicObject
+{
+private:
+	Player* mPlayer;
+public:
+	Enemy();
+	Enemy(const std::wstring& id, const alexio::vec2& position, const int color = alexio::FG_WHITE, Player* player = nullptr);
 
 	void Behaviour() override;
 };

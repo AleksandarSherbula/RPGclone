@@ -34,10 +34,15 @@ void Map::SetTile(const alexio::vec2& id, char c)
 	SetTile(id.x, id.y, c);
 }
 
+bool Map::isSolid(int x, int y)
+{
+	return GetTile(x, y) == '8' ||
+		GetTile(x, y) == '9';
+}
+
 bool Map::isSolid(const alexio::vec2& position)
 {
-	return GetTile(position) == '8' || 
-		   GetTile(position) == '9';
+	return isSolid(position.x, position.y);
 }
 
 void Map::Draw()

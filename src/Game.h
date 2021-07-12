@@ -8,23 +8,35 @@
 #include "Map.h"
 
 #include <memory>
+#include <vector>
+#include <chrono>
+#include <thread>
+
+typedef std::chrono::time_point<std::chrono::system_clock> CurrentTime;
 
 class Game : public alexio::ConsoleEngine
 {
+public:
+	std::unique_ptr<JsonParser> jsonConfig;
+	std::unique_ptr<JsonParser> jsonSave;
+
+	std::unique_ptr<Map> map;
+
+	std::unique_ptr<Player> player;
+	std::vector<std::unique_ptr<Object>> objects;
+
+	unsigned int turns;
+	CurrentTime start;
+	CurrentTime end;
+	int timer;
 public:
 	Game();
 	~Game();
 
 	bool Start() override;
 	bool Update() override;
-private:
-	std::array<bool, 5> mInput;
-public:
-	std::unique_ptr<JsonParser> jsonConfig;
-	std::unique_ptr<JsonParser> jsonSave;	
 
-	std::unique_ptr<Player> player;
-	std::unique_ptr<Map> map;
+	inline CurrentTime Now() { return std::chrono::system_clock::now(); }
 };
 
 inline std::unique_ptr<Game> game = std::make_unique<Game>();

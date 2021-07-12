@@ -21,6 +21,7 @@ public:
 	void SetTile(int x, int y, char c);
 	void SetTile(const alexio::vec2& id, char c);
 
+	bool isSolid(int x, int y);
 	bool isSolid(const alexio::vec2& position);
 
 	void Draw();

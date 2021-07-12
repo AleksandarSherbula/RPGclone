@@ -26,19 +26,47 @@ Game::~Game()
 
 bool Game::Start()
 {
-	player = std::make_unique<Player>(L"X", alexio::vec2(10, 10), alexio::FG_LIGHT_BLUE);
 	map = std::make_unique<Map>();
+
+	turns = 0;
+
+	start = Now();
+
+	player = std::make_unique<Player>(L"B", alexio::vec2(10, 10), alexio::FG_LIGHT_BLUE);
+
+	objects.push_back(std::make_unique<Enemy>(L"X", alexio::vec2(40, 20), alexio::FG_RED, player.get()));
+	objects.push_back(std::make_unique<Enemy>(L"X", alexio::vec2(50, 2), alexio::FG_RED,  player.get()));
+	objects.push_back(std::make_unique<Enemy>(L"X", alexio::vec2(58, 24), alexio::FG_RED, player.get()));
 
 	return true;
 }
 
 bool Game::Update()
 {
-	player->Behaviour();
+	if (turns == 0)
+		player->Behaviour();
+	else
+	{
+		if (turns <= objects.size() && timer >= 1)
+		{
+			objects[turns - 1]->Behaviour();
+			turns++;
+			start = Now();
+		}
+
+		if (turns > objects.size())
+			turns = 0;
+
+		CurrentTime end = Now();
+		timer = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+	}	
 	
 	Clear();
 
 	map->Draw();
+
+	for (auto& obj : objects)
+		obj->Draw();
 
 	player->Draw();
 
