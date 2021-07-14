@@ -16,6 +16,28 @@ Object::~Object()
 {
 }
 
+int Object::GetColorFromJson(const std::string& color)
+{
+	if (color == "BLACK")               return 0x0000;
+	else if (color == "BLUE")           return 0x0001;
+	else if (color == "GREEN")          return 0x0002;
+	else if (color == "CYAN")           return 0x0003;
+	else if (color == "RED")            return 0x0004;
+	else if (color == "MAGENTA")        return 0x0005;
+	else if (color == "YELLOW")         return 0x0006;
+	else if (color == "LIGHT_GREY")     return 0x0007;
+	else if (color == "GREY")           return 0x0008;
+	else if (color == "LIGHT_BLUE")     return 0x0009;
+	else if (color == "LIGHT_GREEN")    return 0x000A;
+	else if (color == "LIGHT_CYAN")     return 0x000B;
+	else if (color == "LIGHT_RED")      return 0x000C;
+	else if (color == "LIGHT_MAGENTA")  return 0x000D;
+	else if (color == "LIGHT_YELLOW")   return 0x000E;
+	else if (color == "WHITE")          return 0x000F;
+
+	return -1;
+}
+
 void Object::SetID(const std::wstring& id)
 {
 	mID = id;
@@ -45,28 +67,90 @@ void Object::Draw(const std::wstring& id, const alexio::vec2& position, const in
 	game->DrawWideString(position, id, color);
 }
 
-DynamicObject::DynamicObject()
+Creature::Creature()
 {
-	mID = L"X";
+	mID = L"x";
 	mPosition = alexio::vec2(0, 0);
 	mColor = alexio::FG_WHITE;
 	mDirection = alexio::vec2(0, 0);
 }
 
-DynamicObject::DynamicObject(const std::wstring& id, const alexio::vec2& position, const int color)
+Creature::Creature(const std::wstring& id, const alexio::vec2& position, const int health, const int damage, const int armor, const int color)
 {
 	mID = id;
 	mPosition = position;
+	mHealth = health;
+	mMaxHealth = health;
+	mDamage = damage;
+	mArmor = armor;
 	mColor = color;
 	mDirection = alexio::vec2(0, 0);
 }
 
-Player::Player() : DynamicObject()
+void Creature::SetHealth(const int health)
+{
+	mHealth = health;
+}
+
+void Creature::SetMaxHealth(const int health)
+{
+	mMaxHealth = health;
+}
+
+void Creature::SetDamage(const int damage)
+{
+	mDamage = damage;
+}
+
+void Creature::SetArmor(const int armor)
+{
+	mArmor = armor;
+}
+
+void Creature::SetData(const std::string& name)
+{
+	nlohmann::json& j = game->jsonConfig->GetJSON();
+
+	std::string tempID = j[name]["ID"].get<std::string>();
+	mID = L" ";
+	std::copy(tempID.begin(), tempID.end(), mID.begin());
+
+	mColor = GetColorFromJson(j[name]["Color"].get<std::string>());
+	mHealth = j[name]["Health"].get<int>();
+	mMaxHealth = j[name]["Health"].get<int>();
+	mDamage = j[name]["Damage"].get<int>();
+	mArmor = j[name]["Armor"].get<int>();
+}
+
+void Creature::UpdateHealth(const int health)
+{
+	mHealth += health;
+}
+
+void Creature::Attack(Creature* creature)
+{
+	creature->UpdateHealth((this->mDamage - creature->GetArmor()) * -1);
+}
+
+Player::Player() : Creature()
 {
 }
 
-Player::Player(const std::wstring& id, const alexio::vec2& position, const int color) : DynamicObject(id, position, color)
+Player::Player(const std::string& name) : Creature()
 {
+	nlohmann::json& j = game->jsonConfig->GetJSON();
+
+	std::string tempID = j[name]["ID"].get<std::string>();
+	mID = L" ";
+	std::copy(tempID.begin(), tempID.end(), mID.begin());
+
+	mPosition.x = j[name]["Position"][0].get<int>();
+	mPosition.y = j[name]["Position"][1].get<int>();
+	mColor = GetColorFromJson(j[name]["Color"].get<std::string>());
+	mHealth = j[name]["Health"].get<int>();
+	mMaxHealth = j[name]["Health"].get<int>();
+	mDamage = j[name]["Damage"].get<int>();
+	mArmor = j[name]["Armor"].get<int>();
 }
 
 void Player::Behaviour()
@@ -75,42 +159,42 @@ void Player::Behaviour()
 
 	if (game->jsonConfig->GetKeyPressed("Up") &&
 		!game->map->isSolid(alexio::vec2(mPosition.x, mPosition.y - 1)))
-	{
+	{		
 		mDirection.y--;
 		game->turns++;
-		game->start = std::chrono::system_clock::now();
+		game->start = game->Now();
 	}
 	if (game->jsonConfig->GetKeyPressed("Down") &&
 		!game->map->isSolid(alexio::vec2(mPosition.x, mPosition.y + 1)))
 	{
 		mDirection.y++;
 		game->turns++;
-		game->start = std::chrono::system_clock::now();
+		game->start = game->Now();
 	}
 	if (game->jsonConfig->GetKeyPressed("Left") &&
 		!game->map->isSolid(alexio::vec2(mPosition.x - 1, mPosition.y)))
 	{
 		mDirection.x--;
 		game->turns++;
-		game->start = std::chrono::system_clock::now();
+		game->start = game->Now();
 	}
 	if (game->jsonConfig->GetKeyPressed("Right") &&
 		!game->map->isSolid(alexio::vec2(mPosition.x + 1, mPosition.y)))
 	{
 		mDirection.x++;
 		game->turns++;
-		game->start = std::chrono::system_clock::now();
+		game->start = game->Now();
 	}
 
 	mPosition += mDirection;
 }
 
-Enemy::Enemy() : DynamicObject()
+Enemy::Enemy() : Creature()
 {
 	mPlayer = nullptr;
 }
 
-Enemy::Enemy(const std::wstring& id, const alexio::vec2& position, const int color, Player* player) : DynamicObject(id, position, color)
+Enemy::Enemy(Player* player)
 {
 	mPlayer = player;
 }
@@ -142,4 +226,18 @@ void Enemy::Behaviour()
 	if (shortestDistance == distanceRight) mDirection = alexio::vec2( 1,  0);
 	
 	mPosition += mDirection;
+}
+
+Item::Item() : Object()
+{
+}
+
+Item::Item(const std::wstring& id, const alexio::vec2& position, const int color)
+	: Object(id, position, color)
+{
+}
+
+void Item::AddToInventory()
+{
+
 }

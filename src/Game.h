@@ -18,17 +18,20 @@ class Game : public alexio::ConsoleEngine
 {
 public:
 	std::unique_ptr<JsonParser> jsonConfig;
+	std::unique_ptr<JsonParser> jsonMap;
 	std::unique_ptr<JsonParser> jsonSave;
 
 	std::unique_ptr<Map> map;
 
 	std::unique_ptr<Player> player;
-	std::vector<std::unique_ptr<Object>> objects;
+	std::vector<std::unique_ptr<Creature>> objects;
 
+	int timer;
 	unsigned int turns;
 	CurrentTime start;
 	CurrentTime end;
-	int timer;
+
+	bool showAdvancedStats;
 public:
 	Game();
 	~Game();
@@ -37,6 +40,8 @@ public:
 	bool Update() override;
 
 	inline CurrentTime Now() { return std::chrono::system_clock::now(); }
+
+	void DrawStats();
 };
 
 inline std::unique_ptr<Game> game = std::make_unique<Game>();

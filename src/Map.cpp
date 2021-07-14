@@ -3,11 +3,11 @@
 
 Map::Map()
 {
-	nWidth = game->jsonConfig->GetString("Map", 0).size();
-	nHeight = game->jsonConfig->GetArraySize("Map");
+	nWidth = game->jsonMap->GetString("Map", 0).size();
+	nHeight = game->jsonMap->GetArraySize("Map");
 	
 	for (int i = 0; i < nHeight; i++)
-		mJsonData += game->jsonConfig->GetString("Map", i);
+		mJsonData += game->jsonMap->GetString("Map", i);
 }
 
 char Map::GetTile(int x, int y)

@@ -10,6 +10,7 @@ Game::Game()
 
 	sAppName = L"RPG clone";
 	jsonConfig = std::make_unique<JsonParser>("data/config/config.json");
+	jsonMap = std::make_unique<JsonParser>("data/config/mapData.json");
 	jsonSave = std::make_unique<JsonParser>("data/save_state/save1.json");
 	//jsonSave = std::make_unique<JsonParser>(rb.vMemory);
 
@@ -29,20 +30,32 @@ bool Game::Start()
 	map = std::make_unique<Map>();
 
 	turns = 0;
-
 	start = Now();
 
-	player = std::make_unique<Player>(L"B", alexio::vec2(10, 10), alexio::FG_LIGHT_BLUE);
+	player = std::make_unique<Player>("Player");
 
-	objects.push_back(std::make_unique<Enemy>(L"X", alexio::vec2(40, 20), alexio::FG_RED, player.get()));
-	objects.push_back(std::make_unique<Enemy>(L"X", alexio::vec2(50, 2), alexio::FG_RED,  player.get()));
-	objects.push_back(std::make_unique<Enemy>(L"X", alexio::vec2(58, 24), alexio::FG_RED, player.get()));
+	for (int i = 0; i < jsonConfig->GetArraySize("EnemyPos"); i++)
+	{
+		int x = jsonConfig->GetJSON()["EnemyPos"][std::to_string(i + 1)][0];
+		int y = jsonConfig->GetJSON()["EnemyPos"][std::to_string(i + 1)][1];
+		objects.push_back(std::make_unique<Enemy>(player.get()));
+		objects[i]->SetPosition(alexio::vec2(x, y));
+	}
+	
+	objects[0]->SetData("SmallEnemies");
+	objects[1]->SetData("SmallEnemies");
+	objects[2]->SetData("Enemies");
+
+	showAdvancedStats = false;
 
 	return true;
 }
 
 bool Game::Update()
 {
+	if (jsonConfig->GetKeyPressed("AdvancedStats"))
+		showAdvancedStats = !showAdvancedStats;
+
 	if (turns == 0)
 		player->Behaviour();
 	else
@@ -70,5 +83,26 @@ bool Game::Update()
 
 	player->Draw();
 
+	DrawStats();
+
+	DrawWideString(alexio::vec2(50, 0), L"\x2022", alexio::FG_RED);
+	DrawWideString(alexio::vec2(51, 0), L"\x2665", alexio::FG_RED);
+
 	return !GetKeyPressed(alexio::ESCAPE);
+}
+
+void Game::DrawStats()
+{
+	DrawWideString(alexio::vec2(0, 0), L"-----------------");	
+	DrawWideString(alexio::vec2(0, 1), L"|   HP: " + std::to_wstring(player->GetHealth()) + L"/" + std::to_wstring(player->GetMaxHealth()) + L"   |");
+	DrawWideString(alexio::vec2(0, 2), L"-----------------");
+
+	if (showAdvancedStats)
+	{
+		DrawWideString(alexio::vec2(0, 30), L"-----------------");
+		DrawWideString(alexio::vec2(0, 31), L"| Health: " + std::to_wstring(player->GetHealth()) + L"/" + std::to_wstring(player->GetMaxHealth()) + L" |");
+		DrawWideString(alexio::vec2(0, 32), L"| Damage: " + std::to_wstring(player->GetDamage()) + L"     |");
+		DrawWideString(alexio::vec2(0, 33), L"| Armor:  " + std::to_wstring(player->GetArmor()) + L"     |");
+		DrawWideString(alexio::vec2(0, 34), L"-----------------");
+	}
 }
