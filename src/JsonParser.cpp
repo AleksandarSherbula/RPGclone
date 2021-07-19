@@ -28,43 +28,6 @@ nlohmann::json& JsonParser::GetJSON()
 	return m_json;
 }
 
-nlohmann::json& JsonParser::GetJObject(const std::string& key, int index)
-{
-    if (index < 0)
-        return m_json[key];
-    else
-        return m_json[key][index];
-}
-
-int JsonParser::GetInt(const std::string& key, int index)
-{
-    if (index < 0)
-	    return m_json[key].get<int>();
-    else
-        return m_json[key][index].get<int>();
-}
-
-int JsonParser::GetArraySize(const std::string& key)
-{
-    return m_json[key].size();
-}
-
-bool JsonParser::GetBool(const std::string& key, int index)
-{
-    if (index < 0)
-        return m_json[key].get<bool>();
-    else
-        return m_json[key][index].get<bool>();
-}
-
-std::string JsonParser::GetString(const std::string& key, int index)
-{
-    if (index < 0)
-        return m_json[key].get<std::string>();
-    else
-        return m_json[key][index].get<std::string>();
-}
-
 bool JsonParser::GetKeyPressed(const std::string& key)
 {
 	for (int i = 0; i < m_json["Input"][key].size(); i++)

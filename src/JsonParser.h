@@ -17,13 +17,7 @@ public:
 	JsonParser(const std::string& filepath);
 	JsonParser(std::vector<char>& rbMemory);
 
-	nlohmann::json& GetJSON();
-	nlohmann::json& GetJObject(const std::string& key, int index = -1);
-	
-	int GetInt(const std::string& key, int index = -1);
-	int GetArraySize(const std::string& key);
-	bool GetBool(const std::string& key, int index = -1);
-	std::string GetString(const std::string& key, int index = -1);
+	nlohmann::json& GetJSON();	
 
 	bool GetKeyPressed(const std::string& key);
 	bool GetKeyUp(const std::string& key);

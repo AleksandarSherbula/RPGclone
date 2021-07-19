@@ -34,17 +34,18 @@ bool Game::Start()
 
 	player = std::make_unique<Player>("Player");
 
-	for (int i = 0; i < jsonConfig->GetArraySize("EnemyPos"); i++)
-	{
-		int x = jsonConfig->GetJSON()["EnemyPos"][std::to_string(i + 1)][0];
-		int y = jsonConfig->GetJSON()["EnemyPos"][std::to_string(i + 1)][1];
-		objects.push_back(std::make_unique<Enemy>(player.get()));
-		objects[i]->SetPosition(alexio::vec2(x, y));
-	}
-	
-	objects[0]->SetData("SmallEnemies");
-	objects[1]->SetData("SmallEnemies");
-	objects[2]->SetData("Enemies");
+	for (int y = 0; y < map->nHeight; y++)
+		for (int x = 0; x < map->nWidth; x++)
+		{
+			char tileID = map->GetTile(x, y);
+			switch (tileID)
+			{
+			case 'x': objects.push_back(std::make_unique<Enemy>("SmallEnemies", alexio::vec2(x, y))); map->SetTile(x, y, '0'); break;
+			case 'X': objects.push_back(std::make_unique<Enemy>("Enemies", alexio::vec2(x, y))); map->SetTile(x, y, '0'); break;
+			case 'p': objects.push_back(std::make_unique<HealthBoost>("SmallHealthBoost", L"\x2022", alexio::vec2(x, y))); break;
+			case 'P': objects.push_back(std::make_unique<HealthBoost>("HealthBoost", L"\x2665", alexio::vec2(x, y))); break;
+			}
+		}
 
 	showAdvancedStats = false;
 
@@ -60,18 +61,25 @@ bool Game::Update()
 		player->Behaviour();
 	else
 	{
-		if (turns <= objects.size() && timer >= 1)
+		if (turns <= objects.size())
 		{
-			objects[turns - 1]->Behaviour();
-			turns++;
-			start = Now();
+			if ((objects[turns - 1]->GetName() == "Enemies" || objects[turns - 1]->GetName() == "SmallEnemies"))
+			{
+				if (timer >= 1)
+				{
+					objects[turns - 1]->Behaviour();
+					turns++;
+					start = Now();
+				}
+			}
+			else
+				turns++;
+
+			CurrentTime end = Now();
+			timer = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 		}
-
-		if (turns > objects.size())
+		else
 			turns = 0;
-
-		CurrentTime end = Now();
-		timer = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
 	}	
 	
 	Clear();
@@ -84,9 +92,6 @@ bool Game::Update()
 	player->Draw();
 
 	DrawStats();
-
-	DrawWideString(alexio::vec2(50, 0), L"\x2022", alexio::FG_RED);
-	DrawWideString(alexio::vec2(51, 0), L"\x2665", alexio::FG_RED);
 
 	return !GetKeyPressed(alexio::ESCAPE);
 }

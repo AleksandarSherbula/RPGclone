@@ -24,7 +24,7 @@ public:
 	std::unique_ptr<Map> map;
 
 	std::unique_ptr<Player> player;
-	std::vector<std::unique_ptr<Creature>> objects;
+	std::vector<std::unique_ptr<Object>> objects;
 
 	int timer;
 	unsigned int turns;

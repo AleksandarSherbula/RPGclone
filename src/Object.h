@@ -9,14 +9,16 @@ class Object
 {
 protected:
 	std::wstring mID;
+	std::string mName;
 	alexio::vec2 mPosition;
 	int mColor;
 public:
 	Object();
-	Object(const std::wstring& id, const alexio::vec2& position, const int color);
+	Object(const std::string& name);
 	~Object();
 
 	inline std::wstring GetID() { return mID; }
+	inline std::string GetName() { return mName; }
 	inline alexio::vec2 GetPosition() { return mPosition; }
 	inline int GetColor() { return mColor; }
 
@@ -28,7 +30,7 @@ public:
 
 	virtual void Behaviour();
 
-	void Draw();
+	virtual void Draw();
 	void Draw(const std::wstring& id, const alexio::vec2& position, const int color = alexio::FG_WHITE);
 };
 
@@ -42,7 +44,7 @@ protected:
 	int mArmor;
 public:
 	Creature();
-	Creature(const std::wstring& id, const alexio::vec2& position, const int health, const int damage, const int armor, const int color = alexio::FG_WHITE);
+	Creature(const std::string& name);
 
 	inline int GetHealth() { return mHealth; }
 	inline int GetMaxHealth() { return mMaxHealth; }
@@ -53,8 +55,6 @@ public:
 	void SetMaxHealth(const int health);
 	void SetDamage(const int damage);
 	void SetArmor(const int armor);
-
-	void SetData(const std::string& name);
 
 	void UpdateHealth(const int health);
 
@@ -72,29 +72,38 @@ public:
 
 class Enemy : public Creature
 {
-private:
-	Player* mPlayer;
 public:
 	Enemy();
-	Enemy(Player* player = nullptr);
+	Enemy(const std::string& name, const alexio::vec2& position);
 
 	void Behaviour() override;
 };
 
 
-class Item : Object
+class Item : public Object
 {
 private:
-	std::wstring sName;
-	std::wstring sDecription;
-
+	std::wstring mDecription;
 public:
 	Item();
-	Item(const std::wstring& id, const alexio::vec2& position, const int color = alexio::FG_WHITE);
+	Item(const std::string& name, const std::wstring& id, const alexio::vec2& position);
 	
 	void AddToInventory();
+
+	void SetDescription(const std::wstring& description);
 	
 	virtual void Use() = 0;
+};
+
+class HealthBoost : public Item
+{
+private:
+	int mAmount;
+public:
+	HealthBoost();
+	HealthBoost(const std::string& name, const std::wstring& id, const alexio::vec2& position);
+
+	void Use() override;
 };
 
 #endif // !OBJECT_H

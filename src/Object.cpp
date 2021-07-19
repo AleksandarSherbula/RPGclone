@@ -5,11 +5,9 @@ Object::Object()
 {
 }
 
-Object::Object(const std::wstring& id, const alexio::vec2& position, const int color)
+Object::Object(const std::string& name)
 {
-	mID = id;
-	mPosition = position;
-	mColor = color;
+	mName = name;
 }
 
 Object::~Object()
@@ -75,16 +73,15 @@ Creature::Creature()
 	mDirection = alexio::vec2(0, 0);
 }
 
-Creature::Creature(const std::wstring& id, const alexio::vec2& position, const int health, const int damage, const int armor, const int color)
+Creature::Creature(const std::string& name) : Object(name)
 {
-	mID = id;
-	mPosition = position;
-	mHealth = health;
-	mMaxHealth = health;
-	mDamage = damage;
-	mArmor = armor;
-	mColor = color;
-	mDirection = alexio::vec2(0, 0);
+	nlohmann::json& j = game->jsonConfig->GetJSON();
+
+	mColor = GetColorFromJson(j[name]["Color"].get<std::string>());
+	mHealth = j[name]["Health"].get<int>();
+	mMaxHealth = j[name]["Health"].get<int>();
+	mDamage = j[name]["Damage"].get<int>();
+	mArmor = j[name]["Armor"].get<int>();
 }
 
 void Creature::SetHealth(const int health)
@@ -107,21 +104,6 @@ void Creature::SetArmor(const int armor)
 	mArmor = armor;
 }
 
-void Creature::SetData(const std::string& name)
-{
-	nlohmann::json& j = game->jsonConfig->GetJSON();
-
-	std::string tempID = j[name]["ID"].get<std::string>();
-	mID = L" ";
-	std::copy(tempID.begin(), tempID.end(), mID.begin());
-
-	mColor = GetColorFromJson(j[name]["Color"].get<std::string>());
-	mHealth = j[name]["Health"].get<int>();
-	mMaxHealth = j[name]["Health"].get<int>();
-	mDamage = j[name]["Damage"].get<int>();
-	mArmor = j[name]["Armor"].get<int>();
-}
-
 void Creature::UpdateHealth(const int health)
 {
 	mHealth += health;
@@ -136,7 +118,7 @@ Player::Player() : Creature()
 {
 }
 
-Player::Player(const std::string& name) : Creature()
+Player::Player(const std::string& name) : Creature(name)
 {
 	nlohmann::json& j = game->jsonConfig->GetJSON();
 
@@ -146,11 +128,6 @@ Player::Player(const std::string& name) : Creature()
 
 	mPosition.x = j[name]["Position"][0].get<int>();
 	mPosition.y = j[name]["Position"][1].get<int>();
-	mColor = GetColorFromJson(j[name]["Color"].get<std::string>());
-	mHealth = j[name]["Health"].get<int>();
-	mMaxHealth = j[name]["Health"].get<int>();
-	mDamage = j[name]["Damage"].get<int>();
-	mArmor = j[name]["Armor"].get<int>();
 }
 
 void Player::Behaviour()
@@ -191,22 +168,26 @@ void Player::Behaviour()
 
 Enemy::Enemy() : Creature()
 {
-	mPlayer = nullptr;
 }
 
-Enemy::Enemy(Player* player)
+Enemy::Enemy(const std::string& name, const alexio::vec2& position) : Creature(name)
 {
-	mPlayer = player;
+	if (name == "SmallEnemies")
+		mID = L"x";
+	else if (name == "Enemies")
+		mID = L"X";
+
+	mPosition = position;
 }
 
 void Enemy::Behaviour()
 {
 	mDirection = alexio::vec2(0, 0);
 	
-	alexio::vec2 targetToUp = mPlayer->GetPosition() - alexio::vec2(mPosition.x, mPosition.y - 1);
-	alexio::vec2 targetToLeft = mPlayer->GetPosition() - alexio::vec2(mPosition.x - 1, mPosition.y);
-	alexio::vec2 targetToDown = mPlayer->GetPosition() - alexio::vec2(mPosition.x, mPosition.y + 1);
-	alexio::vec2 targetToRight = mPlayer->GetPosition() - alexio::vec2(mPosition.x + 1, mPosition.y);
+	alexio::vec2 targetToUp = game->player->GetPosition() - alexio::vec2(mPosition.x, mPosition.y - 1);
+	alexio::vec2 targetToLeft = game->player->GetPosition() - alexio::vec2(mPosition.x - 1, mPosition.y);
+	alexio::vec2 targetToDown = game->player->GetPosition() - alexio::vec2(mPosition.x, mPosition.y + 1);
+	alexio::vec2 targetToRight = game->player->GetPosition() - alexio::vec2(mPosition.x + 1, mPosition.y);
 	
 	float distanceUp = targetToUp.length();
 	float distanceLeft = targetToLeft.length();
@@ -232,12 +213,35 @@ Item::Item() : Object()
 {
 }
 
-Item::Item(const std::wstring& id, const alexio::vec2& position, const int color)
-	: Object(id, position, color)
+Item::Item(const std::string& name, const std::wstring& id, const alexio::vec2& position) : Object(name)
 {
+	mID = id;
+	mPosition = position;
 }
 
 void Item::AddToInventory()
 {
+}
 
+void Item::SetDescription(const std::wstring& description)
+{
+	mDecription = description;
+}
+
+HealthBoost::HealthBoost() : Item()
+{
+}
+
+HealthBoost::HealthBoost(const std::string& name, const std::wstring& id, const alexio::vec2& position)
+	: Item(name, id, position)
+{
+	nlohmann::json& j = game->jsonConfig->GetJSON();
+
+	mColor = GetColorFromJson(j[name]["Color"].get<std::string>());
+	mAmount = j[name]["Amount"].get<int>();
+}
+
+void HealthBoost::Use()
+{
+	game->player->UpdateHealth(mAmount);
 }

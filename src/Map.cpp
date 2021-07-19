@@ -3,11 +3,11 @@
 
 Map::Map()
 {
-	nWidth = game->jsonMap->GetString("Map", 0).size();
-	nHeight = game->jsonMap->GetArraySize("Map");
+	nWidth = game->jsonMap->GetJSON()["Map"][0].get<std::string>().size();
+	nHeight = game->jsonMap->GetJSON()["Map"].size();
 	
 	for (int i = 0; i < nHeight; i++)
-		mJsonData += game->jsonMap->GetString("Map", i);
+		mJsonData += game->jsonMap->GetJSON()["Map"][i];
 }
 
 char Map::GetTile(int x, int y)
@@ -55,8 +55,8 @@ void Map::Draw()
 			switch (tileID)
 			{
 			case '0': game->DrawWideString(alexio::vec2(x, y), L"\x2592", alexio::FG_GREEN); break;
-			case '8': game->DrawWideString(alexio::vec2(x, y), L"\x2248", alexio::FG_BLUE); break;
-			case '9': game->DrawWideString(alexio::vec2(x, y), L"\x2593", alexio::FG_WHITE); break;
+			case '-': game->DrawWideString(alexio::vec2(x, y), L"\x2248", alexio::FG_BLUE); break;
+			case '8': game->DrawWideString(alexio::vec2(x, y), L"\x2593", alexio::FG_WHITE); break;
 			}
 		}
 

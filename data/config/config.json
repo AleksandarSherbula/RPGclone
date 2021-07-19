@@ -8,11 +8,11 @@
     "Left": [ "LEFT", "A" ],
     "Right": [ "RIGHT", "D" ],
     "AdvancedStats": [ "C" ],
-    "Inventory": ["I"]
+    "Inventory": [ "I" ]
   },
 
   "Player": {
-    "ID": "B",
+    "ID": "X",
     "Position": [ 20, 15 ],
     "Color": "LIGHT_BLUE",
     "Health": 10,
@@ -21,27 +21,26 @@
   },
 
   "SmallEnemies": {
-    "ID": "x",
-    "Color":  "RED",
+    "Color": "RED",
     "Health": 5,
     "Damage": 1,
     "Armor": 1
   },
 
   "Enemies": {
-    "ID": "X",
     "Color": "RED",
     "Health": 10,
     "Damage": 3,
     "Armor": 3
   },
 
-  "EnemyPos": {
-    "1": [60, 5],
-    "2": [50, 23],
-    "3": [68, 27]    
+  "SmallHealthBoost": {
+    "Color": "RED",
+    "Amount": 3
   },
 
-  "SmallHealthBoost": 3,
-  "HealthBoost": 6
+  "HealthBoost": {
+    "Color": "RED",
+    "Amount": 6
+  }
 }
